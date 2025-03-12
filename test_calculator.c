@@ -123,6 +123,42 @@ void test_multiply_underflow(void)
     TEST_ASSERT_TRUE(result < INT_MIN/2);
 }
 
+void test_divide_positive_numbers(void)
+{
+    TEST_ASSERT_EQUAL(2, divide(6, 3));
+    TEST_ASSERT_EQUAL(1, divide(3, 2));
+}
+
+void test_divide_positive_and_negative_numbers(void)
+{
+    TEST_ASSERT_EQUAL(-2, divide(8, -4));
+    TEST_ASSERT_EQUAL(-2, divide(-8, 4));
+}
+
+void test_divide_negative_numbers(void)
+{
+    TEST_ASSERT_EQUAL(2, divide(-8, -4));
+}
+
+void test_divide_by_zero(void)
+{
+    TEST_ASSERT_EQUAL(INT_MIN, divide(5, 0));
+    TEST_ASSERT_EQUAL(INT_MIN, divide(0, 0));
+    TEST_ASSERT_EQUAL(INT_MIN, divide(-5, 0));
+}
+
+void test_divide_zero_by_number(void)
+{
+    TEST_ASSERT_EQUAL(0, divide(0, 5));
+    TEST_ASSERT_EQUAL(0, divide(0, -5));
+}
+
+void test_divide_overflow(void)
+{
+    int result = divide(INT_MIN, -1);
+    TEST_ASSERT_TRUE(result < 0);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -148,5 +184,12 @@ int main(void)
     RUN_TEST(test_multiply_zero);
     RUN_TEST(test_multiply_overflow);
     RUN_TEST(test_multiply_underflow);
+
+    RUN_TEST(test_divide_positive_numbers);
+    RUN_TEST(test_divide_positive_and_negative_numbers);
+    RUN_TEST(test_divide_negative_numbers);
+    RUN_TEST(test_divide_by_zero);
+    RUN_TEST(test_divide_zero_by_number);
+    RUN_TEST(test_divide_overflow);
     return UNITY_END();
 }
