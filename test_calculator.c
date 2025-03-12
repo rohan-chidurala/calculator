@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "calculator.h"
+#include <limits.h>  // Added for INT_MAX and INT_MIN
 
 // Optional but needs to be defined (runs BEFORE each test)
 void setUp(void)
@@ -39,6 +40,54 @@ void test_add_zero(void)
     TEST_ASSERT_EQUAL(0, add(0, 0));    // expect 0 + 0 = 0
 }
 
+void test_add_overflow(void)
+{
+    int result = add(INT_MAX, 1);  // Should wrap around or cause undefined behavior
+    TEST_ASSERT_TRUE(result < 0);  // This checks if overflow occurred
+}
+
+// Test integer underflow
+void test_add_underflow(void)
+{
+    int result = add(INT_MIN, -1);
+    TEST_ASSERT_TRUE(result > 0);  // This checks if underflow occurred
+}
+
+void test_subtract_positive_numbers(void)
+{
+    TEST_ASSERT_EQUAL(2, subtract(5, 3));  // We expect 5 - 3 to be 2
+}
+
+void test_subtract_positive_and_negative_numbers(void)
+{
+    TEST_ASSERT_EQUAL(9, subtract(5, -4));  // expect 5 - (-4) = 9
+    TEST_ASSERT_EQUAL(-9, subtract(-5, 4)); // expect -5 - 4 = -9
+}
+
+void test_subtract_negative_numbers(void)
+{
+    TEST_ASSERT_EQUAL(1, subtract(-3, -4));  // expect -3 - (-4) = 1
+}
+
+void test_subtract_zero(void)
+{
+    TEST_ASSERT_EQUAL(5, subtract(5, 0));   // expect 5 - 0 = 5
+    TEST_ASSERT_EQUAL(-5, subtract(0, 5));  // expect 0 - 5 = -5
+    TEST_ASSERT_EQUAL(0, subtract(0, 0));   // expect 0 - 0 = 0
+}
+
+void test_subtract_overflow(void)
+{
+    int result = subtract(INT_MAX, INT_MIN);  // Should cause overflow
+    TEST_ASSERT_TRUE(result < 0);  // This checks if overflow occurred
+}
+
+void test_subtract_underflow(void)
+{
+    int result = subtract(INT_MIN, INT_MAX);  // Should cause underflow
+    TEST_ASSERT_TRUE(result > 0);  // This checks if underflow occurred
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -46,5 +95,15 @@ int main(void)
     RUN_TEST(test_add_positive_and_negative_numbers);
     RUN_TEST(test_add_negative_numbers);
     RUN_TEST(test_add_zero);
+    RUN_TEST(test_add_overflow);
+    RUN_TEST(test_add_underflow);
+    
+    // Subtraction tests
+    RUN_TEST(test_subtract_positive_numbers);
+    RUN_TEST(test_subtract_positive_and_negative_numbers);
+    RUN_TEST(test_subtract_negative_numbers);
+    RUN_TEST(test_subtract_zero);
+    RUN_TEST(test_subtract_overflow);
+    RUN_TEST(test_subtract_underflow);
     return UNITY_END();
 }
